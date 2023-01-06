@@ -11,10 +11,10 @@ export type TodoRepoImplementation = {
 
 export const todoRepoImplementation = (): TodoRepoImplementation => {
   return {
-    getTodos: todoService.getTodos,
-    getTodo: todoService.getTodoById,
-    createTodo: todoService.createTodo,
-    updateTodo: todoService.updateTodo,
-    deleteTodo: todoService.deleteTodoById,
+    getTodos: todoService.getTodos.bind(todoService),
+    getTodo: todoService.getTodoById.bind(todoService),
+    createTodo: todoService.createTodo.bind(todoService),
+    updateTodo: todoService.updateTodo.bind(todoService),
+    deleteTodo: todoService.deleteTodoById.bind(todoService),
   };
 };
