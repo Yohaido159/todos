@@ -15,7 +15,6 @@ class TodoService {
     const { data: todos } = await this.httpClient.get<Todo.Full[]>(
       TodoApi.base
     );
-    console.log("🚀 ~ file: todo.service.ts:16 ~ TodoService ~ getTodos ~ todos", todos)
     return todos.map((todo) => todoFactory(todo));
   }
 

@@ -15,10 +15,6 @@ export namespace IHttpClient {
     getHeader(key: string): string;
     setHeader(key: string, value: string): void;
   }
-
-  export interface Authorized extends Base {
-    getAuthorizationHeader(): string;
-  }
 }
 
 class HttpClient implements IHttpClient.Base {
@@ -50,20 +46,6 @@ class HttpClient implements IHttpClient.Base {
 
   setHeader(key: string, value: string): void {
     this.headers[key] = value;
-  }
-}
-
-class AuthHttpClient extends HttpClient implements IHttpClient.Authorized {
-  constructor() {
-    super();
-    this.headers = {
-      ...this.headers,
-      Authorization: this.getAuthorizationHeader(),
-    };
-  }
-
-  getAuthorizationHeader(): string {
-    return `Bearer ${localStorage.getItem("token")}`;
   }
 }
 
@@ -122,19 +104,25 @@ const getTodos = () => {
   return todos;
 };
 
+function delay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 class MockHttpClient extends HttpClient {
   get(url: string): Promise<any> {
     return new Promise((resolve, reject) => {
-      const base = /\/api\/todos$/;
-      const detail = /\/api\/todos\/\d+$/;
-      if (base.test(url)) {
-        resolve({ data: getTodos() });
-      } else if (detail.test(url)) {
-        const id = parseInt(url.split("/").pop() as string);
-        resolve({ data: getTodoById(id) });
-      } else {
-        reject({ error: "Not Found" });
-      }
+      delay(1000).then(() => {
+        const base = /\/api\/todos$/;
+        const detail = /\/api\/todos\/\d+$/;
+        if (base.test(url)) {
+          resolve({ data: getTodos() });
+        } else if (detail.test(url)) {
+          const id = parseInt(url.split("/").pop() as string);
+          resolve({ data: getTodoById(id) });
+        } else {
+          reject({ error: "Not Found" });
+        }
+      });
     });
   }
 
@@ -181,4 +169,4 @@ class MockHttpClient extends HttpClient {
   }
 }
 
-export { HttpClient, AuthHttpClient, MockHttpClient };
+export { HttpClient, MockHttpClient };

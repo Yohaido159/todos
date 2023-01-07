@@ -5,11 +5,15 @@ import TodoItem from "./TodoItem";
 
 const TodoList = () => {
   const [todosState, setTodosState] = useState<Todo.Full[]>([]);
-  const { todos, getTodos } = useTodoUseCase(todosState, setTodosState);
+  const { todos, getTodos, loading } = useTodoUseCase(todosState, setTodosState);
 
   useEffect(() => {
     getTodos();
   }, []);
+
+  if (loading.getTodos) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div>

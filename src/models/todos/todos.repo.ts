@@ -1,11 +1,23 @@
-import { TodoRepoImplementation } from "./todos.implement";
+import { todoService } from "./todo.service";
+import { Todo } from "./todos.model";
 
-export function createTodoRepo(repoImplentation: TodoRepoImplementation) {
+export type TodoRepo = {
+  getTodos: () => Promise<Todo.Full[]>;
+  getTodo: (id: string | number) => Promise<Todo.Full>;
+  createTodo: (todo: Todo.Base) => Promise<Todo.Full>;
+  updateTodo: (todo: Todo.Full) => Promise<Todo.Full>;
+  deleteTodo: (id: string | number) => Promise<void>;
+};
+
+
+function createTodoRepo() {
     return {
-        getTodos: repoImplentation.getTodos,
-        getTodo: repoImplentation.getTodo,
-        createTodo: repoImplentation.createTodo,
-        updateTodo: repoImplentation.updateTodo,
-        deleteTodo: repoImplentation.deleteTodo
+        getTodos: todoService.getTodos.bind(todoService),
+        getTodo: todoService.getTodoById.bind(todoService),
+        createTodo: todoService.createTodo.bind(todoService),
+        updateTodo: todoService.updateTodo.bind(todoService),
+        deleteTodo: todoService.deleteTodoById.bind(todoService)
     };
 }
+
+export { createTodoRepo };
